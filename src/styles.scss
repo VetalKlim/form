@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Courier+Prime&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+body {
+  //background: #E5E5E5;
+  max-width: 1000px;
+  margin: auto;
+  box-sizing: border-box;
+  padding: 5px;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+  input {
+    outline: none;
+  }
+  :active, :hover, :focus {
+    outline: 0;
+    outline-offset: 0;
+  }
+}

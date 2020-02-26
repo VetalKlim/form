@@ -1,0 +1,141 @@
+<form class="card-component"
+      [formGroup]="myGroup"
+      (ngSubmit)="submit()"
+      [@fadingAwayAnimate]>
+  <div class="position-card" [ngClass]="{'card-rotate' : toggleCard}">
+    <div class="card-front">
+      <div class="card-front__payment-system">
+        <img *ngIf="visaSystemLogo" [@showAnimate] class="payment-system-text" src="assets/img/visa.png">
+        <img *ngIf="masterCardSystemLogo" [@showAnimate] class="payment-system-text" src="assets/img/master.png">
+      </div>
+      <div class="card-front__chip">
+        <img class="chip-text" src="assets/img/credit-card-chip.png" alt="credit-chip">
+      </div>
+      <div class="card-front__number" #inputListCardNumber>
+        <label *ngFor="let item of [1,2,3,4];">
+          <input class="input-number-card"
+                 placeholder="0000"
+                 [id]="'input-'+item"
+                 (keypress)="numericOnly($event)"
+                 (input)="nextInput($event, item)"
+                 autocomplete="off"
+                 minlength="4"
+                 maxlength="4"
+                 type="text"
+                 [name]="'number'+item"
+                 [ngClass]="{'invalid': isSubmittedCard && f['number'+item].errors}"
+                 [formControlName]="'number'+item">
+        </label>
+      </div>
+      <div class="card-front__error">
+        <span class="error-text" *ngIf=" isSubmittedCard "
+              [@fadingAwayAnimate]>
+         Поля карты нельзя оставлять пустым </span>
+        <span class="error-text" *ngIf="errorDate"
+              [@fadingAwayAnimate]> Введи дату </span>
+      </div>
+      <div class="card-front__date" #inputListData>
+        <div class="position-data-input">
+          <label>
+            <input class="input-number-card-data mount-inp"
+                   placeholder="00"
+                   type="text"
+                   autocomplete="off"
+                   id="input-data-1"
+                   (input)="nextInputData($event,1)"
+                   (keypress)="numericData($event)"
+                   maxlength="2"
+                   minlength="2"
+                   max="12"
+                   name="mount"
+                   [ngClass]="{'invalid': errorDate && f.numberData.errors}"
+                   formControlName="numberData">
+          </label>
+          <span class="limiter"> / </span>
+          <label>
+            <input class="input-number-card-data year-inp"
+                   placeholder="00"
+                   type="text"
+                   autocomplete="off"
+                   id="input-data-2"
+                   (input)="nextInputData($event,2)"
+                   (keypress)="numericData($event)"
+                   maxlength="2"
+                   minlength="2"
+                   name="year"
+                   [ngClass]="{'invalid': errorDate && f.numberYear.errors}"
+                   formControlName="numberYear">
+          </label>
+        </div>
+        <div class="valid-block">
+          <span class="valid-block__text"
+                [ngClass]="{'invalid-date':  this.errorDate}">VALID</span>
+          <span class="valid-block__text"
+                [ngClass]="{'invalid-date':  this.errorDate}">THRU</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-back">
+      <div class="card-back__line"></div>
+      <div class="card-back__cvv" #inputCVVCode>
+        <label>
+          <input class="input-cvv-card"
+                 placeholder="***"
+                 autocomplete="off"
+                 type="password"
+                 (focus)="focusInputActive($event)"
+                 (keypress)="numericCVV($event)"
+                 (input)="trackInput($event)"
+                 maxlength="3"
+                 max="3"
+                 name="cvv">
+        </label>
+        <p class="cvv-text">CVV</p>
+      </div>
+    </div>
+  </div>
+  <div class="btn-block" [ngClass]="{'btn-block-cvv': toggleCard}">
+    <div class="btn-next"
+         [@showAnimate]
+         *ngIf="!toggleCard"
+         (click)="next()">
+      <span class="btn-next__text">NEXT</span>
+    </div>
+    <div class="btn-back"
+         [@showAnimate]
+         *ngIf="toggleCard"
+         (click)="back()">
+      <span class="btn-back__text">BACK</span>
+    </div>
+    <button class="btn-submit"
+            [@showAnimate]
+            type="submit"
+            *ngIf="validForm">
+      <span class="btn-back__text">SUBMIT</span>
+    </button>
+  </div>
+  <div class="screen-keyboard" #divElement [@fadingAwayAnimate] *ngIf="focusCVV">
+    <div class="position-keyboard" [@fadingAwayAnimate]>
+      <div class="item" *ngFor="let num  of  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] " (click)="keyboardNumber(num)">
+        <span class="item-number"> {{num}} </span>
+      </div>
+    </div>
+    <div class="item-close">
+      <div class="item-close__close" (click)="focusCVV = false">
+        <span class="block-top"></span>
+        <span class="text">X</span>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="modal-window-hidden" [ngClass]="{'modal-window-visual': modal}">
+  <div class="content-modal">
+    <span class="content-modal__icon-success">
+      <i class="fas fa-check icon"></i>
+    </span>
+    <span class="content-modal__text">Данные вашей карты отправлены!</span>
+    <span class="content-modal__close" (click)="modal = false">
+      <i class="fas fa-times close-icon"></i>
+    </span>
+  </div>
+</div>
