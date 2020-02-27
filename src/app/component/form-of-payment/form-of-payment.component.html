@@ -29,11 +29,11 @@
         </label>
       </div>
       <div class="card-front__error">
-        <span class="error-text" *ngIf=" isSubmittedCard "
+        <span class="error-text" *ngIf="isSubmittedCard"
               [@fadingAwayAnimate]>
-         Поля карты нельзя оставлять пустым </span>
+         Поля карты нельзя оставлять пустыми </span>
         <span class="error-text" *ngIf="errorDate"
-              [@fadingAwayAnimate]> Введи дату </span>
+              [@fadingAwayAnimate]> Введите корректную дату </span>
       </div>
       <div class="card-front__date" #inputListData>
         <div class="position-data-input">
@@ -72,9 +72,9 @@
         </div>
         <div class="valid-block">
           <span class="valid-block__text"
-                [ngClass]="{'invalid-date':  this.errorDate}">VALID</span>
+                [ngClass]="{'invalid-date':errorDate}">VALID</span>
           <span class="valid-block__text"
-                [ngClass]="{'invalid-date':  this.errorDate}">THRU</span>
+                [ngClass]="{'invalid-date':errorDate}">THRU</span>
         </div>
       </div>
     </div>
@@ -85,6 +85,7 @@
           <input class="input-cvv-card"
                  placeholder="***"
                  autocomplete="off"
+                 onpaste="return false;"
                  type="password"
                  (focus)="focusInputActive($event)"
                  (keypress)="numericCVV($event)"

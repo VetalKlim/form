@@ -1,4 +1,4 @@
-import {AfterContentChecked, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {fadingAwayAnimate, showAnimate} from '../../shared/animations/fading-away-animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
@@ -15,7 +15,7 @@ class UserData {
   styleUrls: ['./form-of-payment.component.scss'],
   animations: [fadingAwayAnimate, showAnimate]
 })
-export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
+export class FormOfPaymentComponent implements OnInit {
   toggleCard = false;
   myGroup: FormGroup;
   isSubmittedCard = false;
@@ -42,19 +42,16 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
     this.createFormGroup();
   }
 
-  ngAfterContentChecked(): void {
-  }
-
   next() {
+    this.controlValidDate();
     if (this.myGroup.invalid) {
-      this.errorDate = true;
       this.isSubmittedCard = true;
       this.toggleCard = false;
-    } else {
-      this.errorDate = false;
+      return;
+    }
+    if (this.myGroup.valid === !this.errorDate) {
       this.toggleCard = true;
       this.isSubmittedData = false;
-      this.isSubmittedCard = false;
     }
   }
 
@@ -65,6 +62,7 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
   }
 
   submit() {
+    this.controlValidDate();
     if (this.myGroup.invalid) {
       this.isSubmittedCard = true;
     } else {
@@ -79,11 +77,6 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  transform(value: string) {
-    const datePipe = new DatePipe('en-US');
-    value = datePipe.transform(value, 'MMyy');
-    return value;
-  }
 
   // ____form___________
   createFormGroup() {
@@ -127,9 +120,6 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
         }
       }
     }
-    if (!result) {
-      event.target.value = event.target.value.slice(0, 4);
-    }
     if (event.target.value.toString().length === 0) {
       this.isSubmittedCard = false;
       const inputElement = this.input.nativeElement.getElementsByClassName('input-number-card');
@@ -160,7 +150,6 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
     return result;
   }
 
-
   nextInputData(event, id: number) {
     const pattern = /^\d{2,2}$/;
     const result = pattern.test(event.target.value);
@@ -170,7 +159,16 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
       if (id === 1 && event.target.value > 12) {
         const selected = inputElement.namedItem(`input-data-${id}`);
         this.renderer.setProperty(selected, 'value', '');
-      } else if (id === 2 && this.myGroup.controls.numberData.valid && this.myGroup.controls.numberYear.valid) {
+        // @ts-ignore
+        this.f.numberData.value = '';
+      }
+      if (id === 1 && event.target.value.length <= 1) {
+        this.errorDate = true;
+      } else {
+        this.errorDate = false;
+        this.isSubmittedCard = false;
+      }
+      if (id === 2 && this.myGroup.controls.numberData.valid && this.myGroup.controls.numberYear.valid) {
         this.controlValidDate();
       } else {
         this.errorDate = false;
@@ -180,8 +178,6 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
           selected.parentElement.focus();
         }
       }
-    } else {
-      event.target.value = event.target.value.slice(0, 2);
     }
     if (event.target.value.toString().length === 0) {
       this.isSubmittedData = false;
@@ -195,15 +191,22 @@ export class FormOfPaymentComponent implements OnInit, AfterContentChecked {
   }
 
   controlValidDate() {
-    const nawMount = this.transform(String(new Date())).slice(0, 2);
-    const nawYear = this.transform(String(new Date())).slice(2, 4);
+    const nowMount = this.transform(String(new Date())).slice(0, 2);
+    const nowYear = this.transform(String(new Date())).slice(2, 4);
     const mount = this.myGroup.controls.numberData.value;
     const year = this.myGroup.controls.numberYear.value;
-    if (+nawYear > +year || (+nawMount > mount && +nawYear === +year) || +mount === 0) {
+    if (+nowYear > +year || (+nowMount > mount && +nowYear === +year) || mount === '' || year === '') {
       this.errorDate = true;
+      this.isSubmittedData = true;
     } else {
       this.errorDate = false;
     }
+  }
+
+  transform(value: string) {
+    const datePipe = new DatePipe('en-US');
+    value = datePipe.transform(value, 'MMyy');
+    return value;
   }
 
   // ________методы относящеесяк Credit Card – back
