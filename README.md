@@ -1,4 +1,4 @@
-[Form-of-payment](https://form-of-payment.firebaseapp.com/) 	
+[Form-of-payment](https://form-of-payment.firebaseapp.com/) 	Ссылка на проект ( Firebase / Form-of-payment)
 
 # FormOfPayment
 
