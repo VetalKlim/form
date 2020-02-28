@@ -36,14 +36,17 @@ export class FormOfPaymentComponent implements OnInit {
   @ViewChild('inputListData', {static: false}) inputData: ElementRef;
   @ViewChild('inputCVVCode', {static: false}) inputCVVCode: ElementRef;
   @ViewChild('divElement', {static: false}) divElement: ElementRef;
+
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
     private fb: FormBuilder) {
   }
+
   ngOnInit(): void {
     this.createFormGroup();
   }
+
   next() {
     this.controlValidDate();
     if (this.myGroup.invalid) {
@@ -56,12 +59,14 @@ export class FormOfPaymentComponent implements OnInit {
       this.isSubmittedData = false;
     }
   }
+
   back() {
     this.toggleCard = false;
     this.focusCVV = false;
     this.validForm = false;
     this.errorCodeCVV = false;
   }
+
   submit() {
     this.controlValidDate();
     if (this.myGroup.invalid) {
@@ -77,6 +82,7 @@ export class FormOfPaymentComponent implements OnInit {
       this.validForm = false;
     }
   }
+
   // ____form___________
   createFormGroup() {
     return this.myGroup = this.fb.group({
@@ -88,15 +94,18 @@ export class FormOfPaymentComponent implements OnInit {
       numberYear: ['', [Validators.required, Validators.maxLength(2), Validators.minLength(2)]],
     });
   }
+
   public get f() {
     return this.myGroup.controls;
   }
+
   // ________________методы относящееся Credit Card – front___________
   numericOnly(event: KeyboardEvent): boolean {
     const pattern = /^\d{1}$/;
     const result = pattern.test(event.key);
     return result;
   }
+
   nextInput(event, id?: number) {
     const pattern = /^\d{4,4}$/;
     const result = pattern.test(event.target.value);
@@ -125,6 +134,7 @@ export class FormOfPaymentComponent implements OnInit {
       }
     }
   }
+
   visibleLogoPaymentSystem(event) {
     if (event.target.value.slice(0, 1) === '4') {
       this.visaSystemLogo = true;
@@ -137,11 +147,13 @@ export class FormOfPaymentComponent implements OnInit {
       this.masterCardSystemLogo = false;
     }
   }
+
   numericData(event: KeyboardEvent) {
     const pattern = /^\d{1}$/;
     const result = pattern.test(event.key);
     return result;
   }
+
   nextInputData(event, id: number) {
     const pattern = /^\d{2,2}$/;
     const result = pattern.test(event.target.value);
@@ -181,29 +193,33 @@ export class FormOfPaymentComponent implements OnInit {
       }
     }
   }
+
   controlValidDate() {
     const nowMount = this.transform(String(new Date())).slice(0, 2);
     const nowYear = this.transform(String(new Date())).slice(2, 4);
     const mount = this.myGroup.controls.numberData.value;
     const year = this.myGroup.controls.numberYear.value;
-    if (+nowYear > +year || (+nowMount > mount && +nowYear === +year) || mount === '' || year === '') {
+    if (+nowYear > +year || (+nowMount > mount && +nowYear === +year) || mount === '' || mount === '00' || year === '') {
       this.errorDate = true;
       this.isSubmittedData = true;
     } else {
       this.errorDate = false;
     }
   }
+
   transform(value: string) {
     const datePipe = new DatePipe('en-US');
     value = datePipe.transform(value, 'MMyy');
     return value;
   }
+
   // ________методы относящеесяк Credit Card – back
   numericCVV(event: KeyboardEvent): boolean {
     const pattern = /^\d{1}$/;
     const result = pattern.test(event.key);
     return result;
   }
+
   keyboardNumber(num: number) {
     this.errorCodeCVV = false;
     const inputElement = this.inputCVVCode.nativeElement.getElementsByClassName('input-cvv-card');
@@ -216,11 +232,13 @@ export class FormOfPaymentComponent implements OnInit {
       this.cvvCodeUserData = selected.value;
     }
   }
+
   focusInputActive(e) {
     this.focusCVV = true;
     this.validForm = false;
     e.target.value = '';
   }
+
   randomVisibleBlock() {
     const arr = [];
     const elementBlock = this.divElement.nativeElement.querySelectorAll('.item');
@@ -235,7 +253,8 @@ export class FormOfPaymentComponent implements OnInit {
       this.renderer.appendChild(ele[0], sortItem[index]);
     }
   }
-  trackInput(event) {
+
+  cvvCodeInput(event) {
     const pattern = /^\d{3,3}$/;
     const result = pattern.test(event.target.value);
     if (result || event.target.value.length === 3) {
