@@ -30,44 +30,27 @@
       </div>
       <div class="card-front__error">
         <span class="error-text" *ngIf="isSubmittedCard"
-              [@fadingAwayAnimate]>
-         Поля карты нельзя оставлять пустыми </span>
+              [@showAnimate]>Поля карты нельзя оставлять пустыми </span>
         <span class="error-text" *ngIf="errorDate"
-              [@fadingAwayAnimate]> Введите корректную дату </span>
+              [@showAnimate]> Введите корректную дату </span>
       </div>
       <div class="card-front__date" #inputListData>
         <div class="position-data-input">
-          <label>
-            <input class="input-number-card-data mount-inp"
+          <label class="label" *ngFor="let item of inputDate let ind = index;">
+            <input [class]="'input-number-card-data'+ ' ' + item.class "
                    placeholder="00"
                    type="text"
                    autocomplete="off"
                    onpaste="return false;"
-                   id="input-data-1"
-                   (input)="nextInputData($event,1)"
+                   [id]="'input-data-'+item.id"
+                   (input)="nextInputData($event,ind+1)"
                    (keypress)="numericData($event)"
                    maxlength="2"
                    minlength="2"
-                   max="12"
-                   name="mount"
-                   [ngClass]="{'invalid': errorDate && f.numberData.errors}"
-                   formControlName="numberData">
-          </label>
-          <span class="limiter"> / </span>
-          <label>
-            <input class="input-number-card-data year-inp"
-                   placeholder="00"
-                   type="text"
-                   autocomplete="off"
-                   onpaste="return false;"
-                   id="input-data-2"
-                   (input)="nextInputData($event,2)"
-                   (keypress)="numericData($event)"
-                   maxlength="2"
-                   minlength="2"
-                   name="year"
-                   [ngClass]="{'invalid': errorDate && f.numberYear.errors}"
-                   formControlName="numberYear">
+                   [max]="item.maxNumber"
+                   [name]="item.name"
+                   [ngClass]="{'invalid': errorDate && f[item.nameValidator].errors}"
+                   [formControlName]="item.nameValidator">
           </label>
         </div>
         <div class="valid-block">
@@ -95,6 +78,9 @@
                  name="cvv">
         </label>
         <p class="cvv-text">CVV</p>
+      </div>
+      <div class="error-cvv-code" [@showAnimate] *ngIf="errorCodeCVV">
+        <span class="error-cvv-code__text"> Нужнно вводить только цифры</span>
       </div>
     </div>
   </div>

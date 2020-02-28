@@ -91,69 +91,75 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
-        top: -4px;
         position: relative;
-        left: 6px;
         .position-data-input {
           display: flex;
           justify-content: center;
-          .input-number-card-data {
-            width: 25px;
-            height: 22px;
-            border: none;
-            font-family: Courier;
-            background: top;
-            font-size: 19px;
-            border-bottom: 1px solid #5EB2C2;
-            color: white;
-            transition: 0.5s ease-in;
-            padding: 3px 2px;
-            text-align: center;
-          }
-          .invalid {
-            border-bottom: 1px solid #711312;
-            &::placeholder {
+          .label {
+            .input-number-card-data {
+              width: 25px;
+              height: 22px;
+              border: none;
+              font-family: Courier;
+              background: top;
+              font-size: 19px;
+              border-bottom: 1px solid #5EB2C2;
+              color: white;
               transition: 0.5s ease-in;
-              color: #711312;
+              padding: 3px 2px;
+              text-align: center;
+              margin: 0 5px;
             }
-          }
-          .mount-inp {
-            padding-left: 2px;
-            padding-right: 2px;
-          }
-          .mount-inp::placeholder {
-            transition: 0.5s ease-out;
-            color: #5EB2C2;
-            letter-spacing: 2px;
-            padding-left: 2px;
-            padding-right: 2px;
-          }
-          .year-inp {
-            padding-left: 2px;
-            padding-right: 5px;
-          }
-          .year-inp::placeholder {
-            transition: 0.5s ease-out;
-            color: #5EB2C2;
-            letter-spacing: 2px;
-            padding-left: 2px;
-            padding-right: 5px;
-          }
-          .limiter {
-            font-size: 31px;
-            color: #5EB2C2;
-            position: relative;
-            top: -5px;
-            left: 1px;
-            padding: 0 4px;
-            transform: rotateY(61deg);
-            font-weight: bold
-          }
-          .invalid {
-            border-bottom: 1px solid #711312;
-            &::placeholder {
-              transition: 0.5s ease-in;
-              color: #711312;
+            .invalid {
+              border-bottom: 1px solid #711312;
+              &::placeholder {
+                transition: 0.5s ease-in;
+                color: #711312;
+              }
+            }
+            .mount-inp {
+              padding-left: 2px;
+              padding-right: 2px;
+              position: relative;
+              top: -5px
+            }
+            .mount-inp::placeholder {
+              transition: 0.5s ease-out;
+              color: #5EB2C2;
+              letter-spacing: 2px;
+              padding-left: 0;
+              padding-right: 0;
+            }
+            .year-inp {
+              padding-left: 2px;
+              padding-right: 5px;
+            }
+            .year-inp::placeholder {
+              transition: 0.5s ease-out;
+              color: #5EB2C2;
+              letter-spacing: 2px;
+              padding-left: 2px;
+              padding-right: 5px;
+            }
+            .invalid {
+              border-bottom: 1px solid #711312;
+              &::placeholder {
+                transition: 0.5s ease-in;
+                color: #711312;
+              }
+            }
+            &:first-child {
+              &:after {
+                content: "/";
+                font-size: 27px;
+                color: #5EB2C2;
+                position: relative;
+                top: 2px;
+                left: 1px;
+                padding: 0 4px;
+                transform: rotateY(61deg);
+                font-weight: bold;
+              }
             }
           }
         }
@@ -178,6 +184,7 @@
     .card-back {
       background: linear-gradient(180deg, #50BED1 0%, #25A0B5 98.41%);
       transform: rotateY(180deg);
+      position: relative;
       &__line {
         width: 100%;
         min-height: 42px;
@@ -199,9 +206,9 @@
           font-size: 20px;
           border-bottom: 1px solid #FFFFFF;
           color: #FFFFFF;
-          transition: 0.5s ease-in;
+          transition: 0.5s ease-out;
           letter-spacing: 1px;
-          padding: 0px;
+          padding: 0;
           text-align: center;
         }
         .input-cvv-card::placeholder {
@@ -218,6 +225,17 @@
           font-size: 14px;
           margin: 6px 4px;
           opacity: 0.6;
+        }
+      }
+      .error-cvv-code {
+        position: absolute;
+        bottom: 5px;
+        width: 100%;
+        &__text {
+          font-family: Courier;
+          color: #711312;
+          display: block;
+          text-align: center;
         }
       }
     }
