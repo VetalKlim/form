@@ -53,6 +53,9 @@ export class FormOfPaymentComponent implements OnInit {
     if (this.f.number1.invalid || this.f.number2.invalid || this.f.number3.invalid || this.f.number4.invalid || this.f.numberData.invalid
       || this.f.numberYear.invalid || this.successfulCardNumberEntry || this.errorValidDate || this.errorFormatDate) {
       this.toggleCard = false;
+      if (this.successfulCardNumberEntry) {
+        this.systemError = false;
+      }
       return;
     } else {
       this.toggleCard = true;
@@ -124,12 +127,10 @@ export class FormOfPaymentComponent implements OnInit {
     }
   }
   nextInput(event, id?: number) {
+    this.visibleLogoPaymentSystem();
     const pattern = /^\d{4,4}$/;
     const result = pattern.test(event.target.value);
     if (result) {
-      if (id === 1) {
-        this.visibleLogoPaymentSystem(event);
-      }
       if (id <= 4) {
         if (this.myGroup.dirty) {
           this.cardNumberValidation();
@@ -154,15 +155,20 @@ export class FormOfPaymentComponent implements OnInit {
       }
     }
   }
-  visibleLogoPaymentSystem(event) {
-    if (event.target.value.slice(0, 1) === '4') {
+  visibleLogoPaymentSystem() {
+    const numberCard = this.f.number1.value + this.f.number2.value + this.f.number3.value + this.f.number4.value;
+    const cardValidatorVisa = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+    const cardValidatorMasterCard = /^(?:5[1-5][0-9]{14})$/;
+    if (cardValidatorVisa.test(numberCard)) {
       this.visaSystemLogo = true;
-    } else {
-      this.visaSystemLogo = false;
+      this.masterCardSystemLogo = false;
     }
-    if (event.target.value.slice(0, 1) === '5') {
+    if (cardValidatorMasterCard.test(numberCard)) {
+      this.visaSystemLogo = false;
       this.masterCardSystemLogo = true;
-    } else {
+    }
+    if (this.f.number1.invalid || this.f.number2.invalid || this.f.number3.invalid || this.f.number4.invalid) {
+      this.visaSystemLogo = false;
       this.masterCardSystemLogo = false;
     }
   }
