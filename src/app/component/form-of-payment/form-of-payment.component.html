@@ -44,12 +44,12 @@
                    [id]="'input-data-'+item.id"
                    (input)="nextInputData($event,ind+1)"
                    (keypress)="numericData($event)"
-                   (blur)="blurDate()"
+                   (blur)="controlValidDate()"
                    maxlength="2"
                    minlength="2"
                    [max]="item.maxNumber"
                    [name]="item.name"
-                   [ngClass]="{'invalid': errorValidDate && errorFormatDate && f[item.nameValidator].errors}"
+                   [ngClass]="{'invalid': errorValidDate && errorFormatDate && f[item.nameValidator].errors.pattern}"
                    [formControlName]="item.nameValidator">
           </label>
         </div>
@@ -71,11 +71,10 @@
                  placeholder="***"
                  autocomplete="off"
                  onpaste="return false;"
-                 type="password"
+                 type="number"
                  readonly
                  (focus)="focusInputActive($event)"
                  (keypress)="numericCVV($event)"
-                 (input)="cvvCodeInput($event)"
                  maxlength="3"
                  max="3"
                  formControlName="numberCvv"
@@ -110,14 +109,13 @@
   </div>
   <div class="screen-keyboard" #divElement [@fadingAwayAnimate] *ngIf="focusCVV">
     <div class="position-keyboard" [@fadingAwayAnimate]>
-      <div class="item" *ngFor="let num  of  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] " (click)="keyboardNumber(num)">
+      <div class="item" [@fadingAwayAnimate] *ngFor="let num  of  keyboard " (click)="keyboardNumber(num)">
         <span class="item-number"> {{num}} </span>
       </div>
     </div>
     <div class="item-close">
       <div class="item-close__close" (click)="deleteNumberInputCvv()">
-        <span class="block-top"></span>
-        <span class="text">X</span>
+        <i class="fas fa-backspace delete-icon"></i>
       </div>
     </div>
   </div>

@@ -1,10 +1,10 @@
 .card-component {
   max-width: 500px;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
   margin: 40px auto;
+  min-height: 89vh;
   .position-card {
     position: relative;
     display: flex;
@@ -312,22 +312,25 @@
       .item-close__close {
         width: 45px;
         height: 35px;
-        font-size: 20px;
-        border: 1px solid rgba(0, 87, 102, 0.32);
-        display: flex;
-        color: #002B32;
-        font-family: Open Sans;
-        transition: all 0.5s ease-out;
-        align-items: center;
-        justify-content: center;
-        border-radius: 10%;
-        cursor: pointer;
+        .delete-icon {
+          &:before {
+            cursor: pointer;
+            transition: all 0.5s ease-out;
+            content: "\f55a";
+            font-size: 41px;
+            position: relative;
+            top: 0;
+            left: -11px;
+            color: silver;
+          }
+        }
       }
       :hover {
-        transition: all 0.5s ease-in;
-        background: #0A8DA5;
-        .item-close__close {
-          color: white;
+        .delete-icon {
+          &:before {
+            transition: all 0.5s ease-in;
+            color: #0A8DA5;
+          }
         }
       }
     }

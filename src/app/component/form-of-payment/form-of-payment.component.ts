@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {fadingAwayAnimate, showAnimate} from '../../shared/animations/fading-away-animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
@@ -27,8 +27,8 @@ export class FormOfPaymentComponent implements OnInit {
   errorCodeCVV = false;
   focusCVV = false;
   validForm = false;
+  keyboard = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   systemError = false;
-  // cvvCodeUserData: number;
   modal = false;
   inputDate = [
     {maxNumber: 12, nameValidator: 'numberData', class: 'mount-inp', name: 'mount', id: '1'},
@@ -45,13 +45,14 @@ export class FormOfPaymentComponent implements OnInit {
   }
   ngOnInit(): void {
     this.createFormGroup();
+    this.randomVisibleBlock();
   }
   next() {
+    this.cardNumberValidation();
+    this.controlValidDate();
     if (this.f.number1.invalid || this.f.number2.invalid || this.f.number3.invalid || this.f.number4.invalid || this.f.numberData.invalid
       || this.f.numberYear.invalid || this.successfulCardNumberEntry || this.errorValidDate || this.errorFormatDate) {
       this.toggleCard = false;
-      this.cardNumberValidation();
-      this.controlValidDate();
       return;
     } else {
       this.toggleCard = true;
@@ -170,9 +171,6 @@ export class FormOfPaymentComponent implements OnInit {
     const result = pattern.test(event.key);
     return result;
   }
-  blurDate() {
-    this.controlValidDate();
-  }
   nextInputData(event, id: number) {
     const pattern = /^\d{2,2}$/;
     const result = pattern.test(event.target.value);
@@ -208,7 +206,7 @@ export class FormOfPaymentComponent implements OnInit {
     const nowYear = this.transform(String(new Date())).slice(2, 4);
     const mount = this.myGroup.controls.numberData.value;
     const year = this.myGroup.controls.numberYear.value;
-    if (mount.length <= 1 || year.length <= 1) {
+    if (mount === '' || year === '' || mount === null || year === null || mount.length <= 1 || year.ltngth <= 1) {
       this.errorFormatDate = true;
       this.errorValidDate = false;
     } else if (+nowYear > +year || (+nowMount > mount && +nowYear === +year)) {
@@ -235,51 +233,21 @@ export class FormOfPaymentComponent implements OnInit {
     const inputElement = this.inputCVVCode.nativeElement.getElementsByClassName('input-cvv-card');
     const selected = inputElement.namedItem('cvv');
     this.renderer.setProperty(selected, 'value', selected.value + num);
-    this.randomVisibleBlock();
-    if (selected.value.toString().length === 3) {
-      this.focusCVV = false;
-      this.validForm = true;
+    if (selected.value.toString().length <= 3) {
       this.randomVisibleBlock();
+      this.focusCVV = true;
     }
   }
   focusInputActive(e) {
     this.focusCVV = true;
     this.validForm = false;
     e.target.value = '';
-    // console.log(e.target.value);
+    this.randomVisibleBlock();
   }
   randomVisibleBlock() {
-    const arr = [];
-    setTimeout(() => {
-      const elementBlock = this.divElement.nativeElement.querySelectorAll('.item');
-      for (let i = 0; i < elementBlock.length; i++) {
-        arr.push(elementBlock[i]);
-      }
-      const sortItem = arr.sort((a, d) => {
-        return Math.random() - 1.5;
-      });
-      const ele = this.divElement.nativeElement.getElementsByClassName('position-keyboard');
-      for (const index in sortItem) {
-        this.renderer.appendChild(ele[0], sortItem[index]);
-      }
+    this.keyboard = this.keyboard.sort((a, b) => {
+      return Math.random() - 0.5;
     });
-  }
-  cvvCodeInput(event) {
-    // console.log(event.target.value.length);
-    // if (event.target.value.length <= 3) {
-    //   this.randomVisibleBlock();
-    // }
-    // const pattern = /^\d{3,3}$/;
-    // const result = pattern.test(event.target.value);
-    // if (result || event.target.value.length === 3) {
-    //   this.focusCVV = false;
-    //   this.validForm = true;
-    //   this.errorCodeCVV = false;
-    // } else {
-    //   this.errorCodeCVV = true;
-    //   this.focusCVV = true;
-    //   this.validForm = false;
-    // }
   }
   deleteNumberInputCvv() {
     const inputElement = this.inputCVVCode.nativeElement.getElementsByClassName('input-cvv-card');
@@ -288,4 +256,22 @@ export class FormOfPaymentComponent implements OnInit {
     this.renderer.setProperty(selected, 'value', selected.value.substring(0, selected.value.length - 1));
     console.log(selected.value);
   }
+  @HostListener('click', ['$event']) closeKeyboard(event) {
+    if (
+      event.target.classList.contains('item-number') ||
+      event.target.classList.contains('delete-icon') ||
+      event.target.classList.contains('input-cvv-card')) {
+      setTimeout(() => {
+        const inputElement = this.inputCVVCode.nativeElement.getElementsByClassName('input-cvv-card');
+        const selected = inputElement.namedItem('cvv');
+        if (selected.value.toString().length === 3) {
+          this.focusCVV = false;
+          this.validForm = true;
+        }
+      });
+    } else {
+      this.focusCVV = false;
+    }
+  }
 }
+
