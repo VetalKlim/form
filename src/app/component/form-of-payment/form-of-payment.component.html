@@ -18,7 +18,7 @@
                  [id]="'input-'+item"
                  (keypress)="numericOnly($event)"
                  (input)="nextInput($event, item)"
-                 (blur)="blurNumberCard()"
+                 (blur)="cardNumberValidation()"
                  autocomplete="off"
                  onpaste="return false;"
                  minlength="4"
@@ -31,7 +31,7 @@
       </div>
       <div class="card-front__error">
         <span class="error-text" *ngIf="systemError" [@showAnimate]>Не определена платежная ссистема </span>
-        <span class="error-text" [@showAnimate] *ngIf="successfulCardNumberEntry">Введите корректный номер карты</span>
+        <span class="error-text" [@showAnimate] *ngIf="successfulCardNumberEntry ">Введите корректный номер карты</span>
       </div>
       <div class="card-front__date" #inputListData>
         <div class="position-data-input">
@@ -71,7 +71,7 @@
                  placeholder="***"
                  autocomplete="off"
                  onpaste="return false;"
-                 type="number"
+                 type="password"
                  readonly
                  (focus)="focusInputActive($event)"
                  (keypress)="numericCVV($event)"

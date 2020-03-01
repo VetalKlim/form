@@ -45,7 +45,6 @@ export class FormOfPaymentComponent implements OnInit {
   }
   ngOnInit(): void {
     this.createFormGroup();
-    this.randomVisibleBlock();
   }
   next() {
     this.cardNumberValidation();
@@ -105,10 +104,6 @@ export class FormOfPaymentComponent implements OnInit {
     const pattern = /^\d{1}$/;
     const result = pattern.test(event.key);
     return result;
-  }
-  blurNumberCard() {
-    this.cardNumberValidation();
-    this.systemError = false;
   }
   cardNumberValidation() {
     if (+this.f.number1.value === 0 && +this.f.number2.value === 0 && +this.f.number3.value === 0 && +this.f.number4.value === 0) {
@@ -214,7 +209,7 @@ export class FormOfPaymentComponent implements OnInit {
     const nowYear = this.transform(String(new Date())).slice(2, 4);
     const mount = this.myGroup.controls.numberData.value;
     const year = this.myGroup.controls.numberYear.value;
-    if (mount === '' || year === '' || mount === null || year === null || mount.length <= 1 || year.ltngth <= 1 || mount === '0' || year === '0') {
+    if (mount === '' || year === '' || mount === null || year === null || mount.length <= 1 || year.ltngth <= 1 || mount === '0' || mount === '00' || year === '0' || year === '00') {
       this.errorFormatDate = true;
       this.errorValidDate = false;
     } else if (+nowYear > +year || (+nowMount > mount && +nowYear === +year)) {
