@@ -81,6 +81,8 @@ export class FormOfPaymentComponent implements OnInit {
       this.modal = true;
       this.toggleCard = false;
       this.validForm = false;
+      this.visaSystemLogo = false;
+      this.masterCardSystemLogo = false;
     }
   }
   // ____form___________
@@ -212,7 +214,7 @@ export class FormOfPaymentComponent implements OnInit {
     const nowYear = this.transform(String(new Date())).slice(2, 4);
     const mount = this.myGroup.controls.numberData.value;
     const year = this.myGroup.controls.numberYear.value;
-    if (mount === '' || year === '' || mount === null || year === null || mount.length <= 1 || year.ltngth <= 1) {
+    if (mount === '' || year === '' || mount === null || year === null || mount.length <= 1 || year.ltngth <= 1 || mount === '0' || year === '0') {
       this.errorFormatDate = true;
       this.errorValidDate = false;
     } else if (+nowYear > +year || (+nowMount > mount && +nowYear === +year)) {
