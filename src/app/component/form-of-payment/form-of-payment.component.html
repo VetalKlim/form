@@ -18,21 +18,20 @@
                  [id]="'input-'+item"
                  (keypress)="numericOnly($event)"
                  (input)="nextInput($event, item)"
+                 (blur)="blurNumberCard()"
                  autocomplete="off"
                  onpaste="return false;"
                  minlength="4"
                  maxlength="4"
                  type="text"
                  [name]="'number'+item"
-                 [ngClass]="{'invalid': isSubmittedCard && f['number'+item].errors}"
+                 [ngClass]="{'invalid': successfulCardNumberEntry && f['number'+item].errors}"
                  [formControlName]="'number'+item">
         </label>
       </div>
       <div class="card-front__error">
-        <span class="error-text" *ngIf="isSubmittedCard"
-              [@showAnimate]>Поля карты нельзя оставлять пустыми </span>
-        <span class="error-text" *ngIf="errorDate"
-              [@showAnimate]> Введите корректную дату </span>
+        <span class="error-text" *ngIf="systemError" [@showAnimate]>Не определена платежная ссистема </span>
+        <span class="error-text" [@showAnimate] *ngIf="successfulCardNumberEntry">Введите корректный номер карты</span>
       </div>
       <div class="card-front__date" #inputListData>
         <div class="position-data-input">
@@ -45,19 +44,22 @@
                    [id]="'input-data-'+item.id"
                    (input)="nextInputData($event,ind+1)"
                    (keypress)="numericData($event)"
+                   (blur)="blurDate()"
                    maxlength="2"
                    minlength="2"
                    [max]="item.maxNumber"
                    [name]="item.name"
-                   [ngClass]="{'invalid': errorDate && f[item.nameValidator].errors}"
+                   [ngClass]="{'invalid': errorValidDate && errorFormatDate && f[item.nameValidator].errors}"
                    [formControlName]="item.nameValidator">
           </label>
         </div>
+        <div class="error-data-valid">
+          <span class="data-error-text" *ngIf="errorValidDate " [@showAnimate]>Срок действия карты истек</span>
+          <span class="data-error-text" *ngIf="errorFormatDate" [@showAnimate]> Ведите корректную дату</span>
+        </div>
         <div class="valid-block">
-          <span class="valid-block__text"
-                [ngClass]="{'invalid-date':errorDate}">VALID</span>
-          <span class="valid-block__text"
-                [ngClass]="{'invalid-date':errorDate}">THRU</span>
+          <span class="valid-block__text" [ngClass]="{'invalid-date':errorValidDate }">VALID</span>
+          <span class="valid-block__text" [ngClass]="{'invalid-date':errorValidDate }">THRU</span>
         </div>
       </div>
     </div>
@@ -70,11 +72,13 @@
                  autocomplete="off"
                  onpaste="return false;"
                  type="password"
+                 readonly
                  (focus)="focusInputActive($event)"
                  (keypress)="numericCVV($event)"
                  (input)="cvvCodeInput($event)"
                  maxlength="3"
                  max="3"
+                 formControlName="numberCvv"
                  name="cvv">
         </label>
         <p class="cvv-text">CVV</p>
@@ -111,7 +115,7 @@
       </div>
     </div>
     <div class="item-close">
-      <div class="item-close__close" (click)="focusCVV = false">
+      <div class="item-close__close" (click)="deleteNumberInputCvv()">
         <span class="block-top"></span>
         <span class="text">X</span>
       </div>
