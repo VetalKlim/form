@@ -255,9 +255,7 @@ export class FormOfPaymentComponent implements OnInit {
   deleteNumberInputCvv() {
     const inputElement = this.inputCVVCode.nativeElement.getElementsByClassName('input-cvv-card');
     const selected = inputElement.namedItem('cvv');
-    console.log(selected.value);
     this.renderer.setProperty(selected, 'value', selected.value.substring(0, selected.value.length - 1));
-    console.log(selected.value);
   }
   @HostListener('click', ['$event']) closeKeyboard(event) {
     if (
