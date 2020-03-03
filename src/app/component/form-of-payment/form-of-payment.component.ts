@@ -2,6 +2,8 @@ import {Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from 
 import {fadingAwayAnimate, showAnimate} from '../../shared/animations/fading-away-animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
+import {interval, Subscription} from 'rxjs';
+import {map, scan, take, tap} from 'rxjs/operators';
 
 class UserData {
   numberCard: string;
@@ -27,7 +29,7 @@ export class FormOfPaymentComponent implements OnInit {
   errorCodeCVV = false;
   focusCVV = false;
   validForm = false;
-  keyboard = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  keyboard = [];
   systemError = false;
   modal = false;
   inputDate = [
@@ -241,23 +243,27 @@ export class FormOfPaymentComponent implements OnInit {
       this.focusCVV = true;
     }
   }
-  focusInputActive(e) {
+  focusInputActive(e): void {
     this.focusCVV = true;
     this.validForm = false;
     e.target.value = '';
     this.randomVisibleBlock();
   }
-  randomVisibleBlock() {
-    this.keyboard = this.keyboard.sort((a, b) => {
+  randomVisibleBlock(): void {
+    this.keyboard = [];
+    const randomKeyboard = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].sort((a, b) => {
       return Math.random() - 0.5;
     });
+    for (let v = 0; v < randomKeyboard.length; v++) {
+      setTimeout(() => {
+        this.keyboard.push(randomKeyboard[v]);
+      }, 200);
+    }
   }
   deleteNumberInputCvv() {
     const inputElement = this.inputCVVCode.nativeElement.getElementsByClassName('input-cvv-card');
     const selected = inputElement.namedItem('cvv');
-    console.log(selected.value);
     this.renderer.setProperty(selected, 'value', selected.value.substring(0, selected.value.length - 1));
-    console.log(selected.value);
   }
   @HostListener('click', ['$event']) closeKeyboard(event) {
     if (
