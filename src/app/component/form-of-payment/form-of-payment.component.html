@@ -68,6 +68,7 @@
       <div class="card-back__cvv" #inputCVVCode>
         <label>
           <input class="input-cvv-card"
+                 id="input-cvv"
                  placeholder="***"
                  autocomplete="off"
                  onpaste="return false;"
@@ -108,8 +109,8 @@
     </button>
   </div>
   <div class="screen-keyboard" #divElement [@fadingAwayAnimate] *ngIf="focusCVV">
-    <div class="position-keyboard" [@fadingAwayAnimate]>
-      <div class="item" [@fadingAwayAnimate] *ngFor="let num  of  keyboard " (click)="keyboardNumber(num)">
+    <div class="position-keyboard" [@showAnimate]>
+      <div class="item" [@showAnimate] *ngFor="let num  of  keyboard " (click)="keyboardNumber(num)">
         <span class="item-number"> {{num}} </span>
       </div>
     </div>
